@@ -68,7 +68,9 @@ bool Adafruit_SPIFlash::begin(void)
   while ( readStatus() & 0x01 ) {}
 
   // The suspended write/erase bit should be low.
-  while ( readStatus2() & 0x80 ) {}
+  if (!_flash_dev->single_status_byte) {
+    while ( readStatus2() & 0x80 ) {}
+  }
 
   _trans->runCommand(SFLASH_CMD_ENABLE_RESET);
   _trans->runCommand(SFLASH_CMD_RESET);
